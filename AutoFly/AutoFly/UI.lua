@@ -1,16 +1,27 @@
--- UI.lua
+-- UI.lua (TEXT ONLY)
+warn("[AutoFly] UI.lua loaded")
+
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 local PlayerGui = plr:WaitForChild("PlayerGui")
 
+-- clear UI cũ
+pcall(function()
+    PlayerGui.AutoFlyUI:Destroy()
+end)
+
 -- LOAD MODULE
+warn("[AutoFly] Loading modules...")
+
 local Islands = loadstring(game:HttpGet(
     "https://raw.githubusercontent.com/nguyenducleminh11-pixel/CuongLoHub/main/AutoFly/AutoFly/Islands.lua"
 ))()
+warn("[AutoFly] Islands loaded")
 
 local Fly = loadstring(game:HttpGet(
     "https://raw.githubusercontent.com/nguyenducleminh11-pixel/CuongLoHub/main/AutoFly/AutoFly/FlyCore.lua"
 ))()
+warn("[AutoFly] FlyCore loaded")
 
 -- SEA DETECT
 local function GetSea()
@@ -21,26 +32,34 @@ local function GetSea()
 end
 
 local SEA = GetSea()
-if not SEA then return end
+if not SEA then
+    warn("[AutoFly] ❌ Not in Blox Fruits")
+    return
+end
+warn("[AutoFly] Detected:", SEA)
 
 -- GUI ROOT
 local gui = Instance.new("ScreenGui")
 gui.Name = "AutoFlyUI"
 gui.ResetOnSpawn = false
 gui.Parent = PlayerGui
+warn("[AutoFly] UI created")
 
--- LOGO
-local logo = Instance.new("ImageButton", gui)
-logo.Size = UDim2.fromOffset(58, 58)
-logo.Position = UDim2.new(0, 15, 0.5, -29)
-logo.BackgroundTransparency = 1
-logo.Image = "https://cdn.discordapp.com/avatars/1160375285976408185/3c0834c083a843c5fa671b85d6cafebd.png"
-logo.ZIndex = 10
+-- TOGGLE BUTTON (TEXT)
+local toggle = Instance.new("TextButton", gui)
+toggle.Size = UDim2.fromOffset(110, 36)
+toggle.Position = UDim2.new(0, 15, 0.5, -18)
+toggle.BackgroundColor3 = Color3.fromRGB(30,30,30)
+toggle.Text = "AUTO FLY"
+toggle.TextColor3 = Color3.new(1,1,1)
+toggle.Font = Enum.Font.GothamBold
+toggle.TextSize = 13
+Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 10)
 
 -- PANEL
 local panel = Instance.new("Frame", gui)
 panel.Size = UDim2.fromOffset(240, 300)
-panel.Position = UDim2.new(0, 85, 0.5, -150)
+panel.Position = UDim2.new(0, 135, 0.5, -150)
 panel.BackgroundColor3 = Color3.fromRGB(22,22,22)
 panel.Visible = false
 panel.ZIndex = 9
@@ -84,6 +103,7 @@ local function makeButton(name, pos)
     Instance.new("UICorner", b).CornerRadius = UDim.new(0, 10)
 
     b.MouseButton1Click:Connect(function()
+        warn("[AutoFly] Fly to:", name)
         Fly.Start(pos)
         panel.Visible = false
     end)
@@ -93,6 +113,10 @@ for island, pos in pairs(Islands[SEA]) do
     makeButton(island, pos)
 end
 
-logo.MouseButton1Click:Connect(function()
+-- TOGGLE PANEL
+toggle.MouseButton1Click:Connect(function()
     panel.Visible = not panel.Visible
+    warn("[AutoFly] Toggle panel:", panel.Visible)
 end)
+
+warn("[AutoFly] ✅ Ready (Text UI)")
