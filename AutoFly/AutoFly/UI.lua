@@ -5,11 +5,11 @@ local PlayerGui = plr:WaitForChild("PlayerGui")
 
 -- LOAD MODULE
 local Islands = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/nguyenducleminh11-pixel/CuongLoHub/main/AutoFly/Islands.lua"
+    "https://raw.githubusercontent.com/nguyenducleminh11-pixel/CuongLoHub/main/AutoFly/AutoFly/Islands.lua"
 ))()
 
 local Fly = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/nguyenducleminh11-pixel/CuongLoHub/main/AutoFly/FlyCore.lua"
+    "https://raw.githubusercontent.com/nguyenducleminh11-pixel/CuongLoHub/main/AutoFly/AutoFly/FlyCore.lua"
 ))()
 
 -- SEA DETECT
