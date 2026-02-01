@@ -1,10 +1,9 @@
-local UI = {}
-
+-- UI.lua
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 local PlayerGui = plr:WaitForChild("PlayerGui")
 
--- IMPORT MODULE
+-- LOAD MODULE
 local Islands = loadstring(game:HttpGet(
     "https://raw.githubusercontent.com/nguyenducleminh11-pixel/CuongLoHub/main/AutoFly/Islands.lua"
 ))()
@@ -30,7 +29,7 @@ gui.Name = "AutoFlyUI"
 gui.ResetOnSpawn = false
 gui.Parent = PlayerGui
 
--- LOGO BUTTON
+-- LOGO
 local logo = Instance.new("ImageButton", gui)
 logo.Size = UDim2.fromOffset(58, 58)
 logo.Position = UDim2.new(0, 15, 0.5, -29)
@@ -39,53 +38,50 @@ logo.Image = "https://cdn.discordapp.com/avatars/1160375285976408185/3c0834c083a
 logo.ZIndex = 10
 
 -- PANEL
-local panel = Instance.new("ScrollingFrame", gui)
-panel.Size = UDim2.fromOffset(230, 280)
-panel.Position = UDim2.new(0, 85, 0.5, -140)
+local panel = Instance.new("Frame", gui)
+panel.Size = UDim2.fromOffset(240, 300)
+panel.Position = UDim2.new(0, 85, 0.5, -150)
 panel.BackgroundColor3 = Color3.fromRGB(22,22,22)
-panel.BorderSizePixel = 0
 panel.Visible = false
-panel.ScrollBarImageTransparency = 1
-panel.CanvasSize = UDim2.new()
 panel.ZIndex = 9
-
-local corner = Instance.new("UICorner", panel)
-corner.CornerRadius = UDim.new(0, 14)
+Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 14)
 
 -- TITLE
 local title = Instance.new("TextLabel", panel)
-title.Size = UDim2.new(1, -10, 0, 36)
-title.Position = UDim2.fromOffset(5, 6)
+title.Size = UDim2.new(1, -20, 0, 36)
+title.Position = UDim2.fromOffset(10, 8)
 title.BackgroundTransparency = 1
 title.Text = "Auto Fly - "..SEA
-title.TextColor3 = Color3.fromRGB(255,255,255)
+title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.GothamBold
 title.TextSize = 14
-title.TextXAlignment = Left
+title.TextXAlignment = Enum.TextXAlignment.Left
 
--- LIST
-local list = Instance.new("UIListLayout", panel)
+-- SCROLL
+local scroll = Instance.new("ScrollingFrame", panel)
+scroll.Position = UDim2.fromOffset(10, 50)
+scroll.Size = UDim2.new(1, -20, 1, -60)
+scroll.CanvasSize = UDim2.new()
+scroll.ScrollBarImageTransparency = 1
+scroll.BackgroundTransparency = 1
+
+local list = Instance.new("UIListLayout", scroll)
 list.Padding = UDim.new(0, 6)
-list.HorizontalAlignment = Enum.HorizontalAlignment.Center
-list.VerticalAlignment = Enum.VerticalAlignment.Top
 
 list:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    panel.CanvasSize = UDim2.fromOffset(0, list.AbsoluteContentSize.Y + 50)
+    scroll.CanvasSize = UDim2.fromOffset(0, list.AbsoluteContentSize.Y + 10)
 end)
 
--- BUTTON MAKER
+-- BUTTON
 local function makeButton(name, pos)
-    local b = Instance.new("TextButton", panel)
-    b.Size = UDim2.new(1, -20, 0, 34)
+    local b = Instance.new("TextButton", scroll)
+    b.Size = UDim2.new(1, 0, 0, 34)
     b.BackgroundColor3 = Color3.fromRGB(35,35,35)
     b.Text = name
     b.TextColor3 = Color3.new(1,1,1)
     b.Font = Enum.Font.Gotham
     b.TextSize = 13
-    b.AutoButtonColor = true
-
-    local c = Instance.new("UICorner", b)
-    c.CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 10)
 
     b.MouseButton1Click:Connect(function()
         Fly.Start(pos)
@@ -93,14 +89,10 @@ local function makeButton(name, pos)
     end)
 end
 
--- PUSH ISLANDS
 for island, pos in pairs(Islands[SEA]) do
     makeButton(island, pos)
 end
 
--- TOGGLE PANEL
 logo.MouseButton1Click:Connect(function()
     panel.Visible = not panel.Visible
 end)
-
-return UI
